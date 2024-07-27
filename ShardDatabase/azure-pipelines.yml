@@ -24,5 +24,4 @@ jobs:
 - job: databaseEnvironments
   steps:
   - ${{ each database in parameters.databaseEnvironments }}:
-    - ${{ each shard in database.shards }}:
-      - script: echo "Processing environmet:" ${{ database.name }} " Shard name:" ${{ shard }}
+    - script: echo "Processing environmet:" ${{ database.name }}
