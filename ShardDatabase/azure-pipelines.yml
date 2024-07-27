@@ -5,16 +5,29 @@ pool:
   vmImage: 'windows-latest'
 
 parameters:
-- name: environmentSettings
+- name: databaseEnvironments
   type: object
   default: 
   - environmentName: 'dev'
-    shards: ['shard1', 'shard2']
-  - environmentName: 'uat'
-    shards: ['shard1', 'shard2', 'shard3']
+    shards: 
+      - shard: 'shard1'
+        connectionString: 'paprika1'
+      - shard: 'shard2'
+        connectionString: 'paprika2'
+  - environmentName: 'test'
+    shards: 
+      - shard: 
+        name: 'shard1'
+        connectionString: 'paprika1'
+      - shard: 
+        name: 'shard2'
+        connectionString: 'paprika2'
+      - shard:
+        name: 'shard3'
+        connectionString: 'paprika3'
 
 
 steps:
-- ${{ each environmentSetting in parameters.environmentSettings }}: 
-  - ${{ each shard in environmentSetting.shards }}:
-    - script: echo "Environment:" ${{ environmentSetting.Name }} "Shard:" ${{ shard }}
+- ${{ each databaseEnvironment in parameters.databaseEnvironments }}: 
+  - ${{ each shard in databaseEnvironment.shards }}:
+    - script: echo "Environment:" ${{ databaseEnvironment.environmentName }} "Shard:" ${{ shard.name }} "connectionString:" ${{shard.connectionString}}
