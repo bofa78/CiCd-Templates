@@ -8,15 +8,15 @@ parameters:
   - name: databaseEnvironments
     type: object
     default: 
-      dev: 
-        name: "dev"
-        shards: [shard1, shard2]
-      test: 
-        name: "test"
-        shards: [shard1, shard2, shard3]
-      lnp: 
-        name: "test"
-        shards: [shard1, shard2, shard3, shard4]
+      - dev: 
+          name: "dev"
+          shards: [shard1, shard2]
+      - test: 
+          name: "test"
+          shards: [shard1, shard2, shard3]
+      - lnp: 
+          name: "test"
+          shards: [shard1, shard2, shard3, shard4]
 
 
 
