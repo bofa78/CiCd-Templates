@@ -1,0 +1,36 @@
+- task: PowerShell@2  
+  displayName: Debug
+  inputs:    
+    pwsh: true
+    targetType: inline    
+    script: |
+      $parameters = '${{ replace(convertToJson(parameters.parameters),'''','') }}'      
+      $variables = '${{ replace(convertToJson(parameters.variables),'''','') }}'
+      $directoriesRegEx = '\W[a-zA-Z]:[\\/\w\d.]*(.[\w\d])*'
+
+      $parametersMatches = $parameters | Select-String $directoriesRegEx -AllMatches      
+      $variablesMatches = $variables | Select-String $directoriesRegEx -AllMatches
+      if ($parametersMatches.Matches) {
+        $parametersMatches.Matches | ForEach-Object {          
+            $parameters = $parameters.replace($($_.Value),$($_.Value).replace('\','/'))
+            }      
+        }
+      if ($variablesMatches.Matches) {
+        $variablesMatches.Matches | ForEach-Object {          
+            $variables = $variables.replace($($_.Value),$($_.Value).replace('\','/'))
+            }      
+        }
+      $parameters = $parameters | ConvertFrom-Json
+      $variables = $variables | ConvertFrom-Json          
+      Write-Output "      ================================================      Parameters      ================================================"
+      $parameters.PSObject.Properties | Sort-Object -Property Name | ForEach-Object {          
+        Write-Output "$($_.Name): $($_.Value)"
+      }
+      Write-Output "      ================================================      Variables      ================================================"
+      $variables.PSObject.Properties | Sort-Object -Property Name | Where-Object Name -NotMatch '^system(\.)?|build\.' | ForEach-Object {         
+        Write-Output "$($_.Name): $($_.Value)"
+      }
+      Write-Output "      ===============================================      Agent      ==============================================="
+      $variables.PSObject.Properties | Sort-Object -Property Name | Where-Object Name -Match '^system(\.)?|build\.' | ForEach-Object {          
+        Write-Output "$($_.Name): $($_.Value)"
+      }

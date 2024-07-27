@@ -1,0 +1,20 @@
+parameters:
+  environments: []
+
+jobs:
+${{ each environment in parameters.environments }}:
+  ${{ each shard in environment.shards }}:
+    - job: Deploy-${{ environment.name }}-${{ shard.shard }}
+      displayName: 'Deploy to ${{ shard.shard }} in ${{ environment.name }}'
+      pool:
+        vmImage: 'ubuntu-latest'
+
+      steps:
+      - checkout: self
+
+      - script: |
+          echo "Deploying to ${{ shard.shard }} in ${{ environment.name }} environment"
+          echo "Using connection string: ${{ shard.connectionString }}"
+          # Replace the following line with the actual deployment command
+          ./deploy.sh --connection-string "${{ shard.connectionString }}"
+        displayName: 'Deploy to ${{ shard.shard }} in ${{ environment.name }} environment'
