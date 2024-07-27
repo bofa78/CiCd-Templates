@@ -11,10 +11,10 @@ parameters:
   - environmentName: 'dev'
     shards: ['shard1', 'shard2']
   - environmentName: 'uat'
-    shards: ['shard1', 'shard2', 'shard2']
+    shards: ['shard1', 'shard2', 'shard3']
 
 
 steps:
 - ${{ each environmentSetting in parameters.environmentSettings }}: 
   - ${{ each shard in environmentSetting.shards }}:
-    - script: echo ${{ shard }}
+    - script: echo "Environment:" ${{ environmentSetting.Name }} "Shard:" ${{ shard }}
