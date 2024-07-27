@@ -23,5 +23,6 @@ parameters:
 jobs:
 - job: ForEachTest 
   steps:
-  - ${{ each database in parameters.databaseEnvironments }}:
-    - script: echo "Processing environmet:" ${{ database.name }} "---- ----"
+    - ${{ each database in parameters.databaseEnvironments }}:
+      - ${{ each shard in database.shards }}:
+        - script: echo "Processing environmet:" ${{ database.name }} "---- ----"
