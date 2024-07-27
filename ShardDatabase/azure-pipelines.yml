@@ -10,9 +10,11 @@ parameters:
   default: 
   - environmentName: 'dev'
     shards: 
-      - shard: 'shard1'
+      - shard: 
+        name: 'shard1'
         connectionString: 'paprika1'
-      - shard: 'shard2'
+      - shard:
+        name: 'shard2'
         connectionString: 'paprika2'
   - environmentName: 'test'
     shards: 
