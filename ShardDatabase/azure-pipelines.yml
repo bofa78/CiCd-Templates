@@ -5,12 +5,24 @@ pool:
   vmImage: 'windows-latest'
 
 parameters:
-  - name: users
+  - name: databaseEnvironments
     type: object
-    default: [john, jane, bob]
+    default: 
+      dev: 
+        name: "dev"
+        shards: [shard1, shard2]
+      test: 
+        name: "test"
+        shards: [shard1, shard2, shard3]
+      lnp: 
+        name: "test"
+        shards: [shard1, shard2, shard3, shard4]
+
+
 
 jobs:
-- job: LoopOverUsers
+- job: databaseEnvironments
   steps:
-  - ${{ each user in parameters.users }}:
-    - script: echo "Processing user:" ${{ user }}
+  - ${{ each database in parameters.databaseEnvironments }}:
+    - ${{ each shard in database.shards }}:
+      - script: echo "Processing environmet:" ${{ database.name }} " Shard name:" ${{ shard }}
