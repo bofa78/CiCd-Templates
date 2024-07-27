@@ -2,28 +2,15 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 parameters:
-  environments: []
+  - name: users
+    type: object
+    default: [john, jane, bob]
 
 jobs:
-- template: deploy-template.yml
-  parameters:
-    environments:
-      - name: 'Dev'
-        shards:
-          - shard: 'dev-shard1'
-            connectionString: 'Server=myserver;Database=dev_shard1;User Id=myuser;Password=mypassword;'
-          - shard: 'dev-shard2'
-            connectionString: 'Server=myserver;Database=dev_shard2;User Id=myuser;Password=mypassword;'
-      - name: 'Test'
-        shards:
-          - shard: 'test-shard1'
-            connectionString: 'Server=myserver;Database=test_shard1;User Id=myuser;Password=mypassword;'
-          - shard: 'test-shard2'
-            connectionString: 'Server=myserver;Database=test_shard2;User Id=myuser;Password=mypassword;'
-          - shard: 'test-shard3'
-            connectionString: 'Server=myserver;Database=test_shard3;User Id=myuser;Password=mypassword;'
-          - shard: 'test-shard4'
-            connectionString: 'Server=myserver;Database=test_shard4;User Id=myuser;Password=mypassword;'
+- job: LoopOverUsers
+  steps:
+  - ${{ each user in parameters.users }}:
+    - script: echo "Processing user:" ${{ user }}
