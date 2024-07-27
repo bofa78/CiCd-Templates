@@ -8,13 +8,13 @@ parameters:
   - name: databaseEnvironments
     type: object
     default: 
-      - dev: 
+      - environmentSettings:
           name: "dev"
           shards: [shard1, shard2]
-      - test: 
+      - environmentSettings:
           name: "test"
           shards: [shard1, shard2, shard3]
-      - lnp: 
+      - environmentSettings:
           name: "test"
           shards: [shard1, shard2, shard3, shard4]
 
@@ -23,6 +23,6 @@ parameters:
 jobs:
 - job: ForEachTest 
   steps:
-    - ${{ each database in parameters.databaseEnvironments }}:
-      - ${{ each shard in database.shards }}:
-        - script: echo "Processing environmet:" ${{ database.name }} "---- ----"
+    - ${{ each environmentSetting in parameters.databaseEnvironments }}:
+      - ${{ each shard in environmentSetting.shards }}:
+        - script: echo "Processing environmet:" ${{ environmentSetting.name }} "---- ----"
