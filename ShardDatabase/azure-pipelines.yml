@@ -21,7 +21,7 @@ parameters:
 
 
 jobs:
-- job: databaseEnvironments
+- job: ForEachTest 
   steps:
   - ${{ each database in parameters.databaseEnvironments }}:
-    - script: echo "Processing environmet:" ${{ database.name }}
+    - script: echo "Processing environmet:" ${{ database.name }} "---- ----"
