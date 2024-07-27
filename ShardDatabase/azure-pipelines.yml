@@ -5,24 +5,16 @@ pool:
   vmImage: 'windows-latest'
 
 parameters:
-  - name: databaseEnvironments
-    type: object
-    default: 
-      - environmentSettings:
-          name: "dev"
-          shards: [shard1, shard2]
-      - environmentSettings:
-          name: "test"
-          shards: [shard1, shard2, shard3]
-      - environmentSettings:
-          name: "test"
-          shards: [shard1, shard2, shard3, shard4]
+- name: environmentSettings
+  type: object
+  default: 
+  - environmentName: 'dev'
+    shards: ['shard1', 'shard2']
+  - environmentName: 'uat'
+    shards: ['shard1', 'shard2', 'shard2']
 
 
-
-jobs:
-- job: ForEachTest 
-  steps:
-    - ${{ each environmentSetting in parameters.databaseEnvironments }}:
-      - ${{ each shard in environmentSetting.shards }}:
-        - script: echo "Processing environmet:" ${{ environmentSetting.name }} "---- ----"
+steps:
+- ${{ each environmentSetting in parameters.environmentSettings }}: 
+  - ${{ each shard in environmentSetting.shards }}:
+    - script: echo ${{ shard }}
